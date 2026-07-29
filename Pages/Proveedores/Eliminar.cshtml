@@ -1,0 +1,37 @@
+﻿@page "{id:int}"
+@model EliminarModel
+@{
+    ViewData["Title"] = "VitaNova - Eliminar Proveedor";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0"><i class="bi bi-trash"></i> Eliminar Proveedor</h4>
+            </div>
+            <div class="card-body text-center">
+                <i class="bi bi-exclamation-triangle-fill text-danger display-3 mb-3"></i>
+                <h4 class="fw-bold">¿Esta seguro que desea eliminar este proveedor?</h4>
+                <p class="text-muted">Esta accion no se puede deshacer.</p>
+
+                <div class="card bg-light border-0 rounded-3 p-3 mb-4 text-start">
+                    <p class="mb-2"><strong>Nombre:</strong> @Model.Proveedor.Nombre</p>
+                    <p class="mb-2"><strong>NIT:</strong> @(Model.Proveedor.NIT ?? "N/A")</p>
+                    <p class="mb-0"><strong>Telefono:</strong> @(Model.Proveedor.Telefono ?? "N/A")</p>
+                </div>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Proveedor.ID" />
+
+                    <div class="d-flex gap-2">
+                        <a href="/Proveedores" class="btn btn-outline-secondary w-50">Cancelar</a>
+                        <button type="submit" class="btn btn-danger w-50">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

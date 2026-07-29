@@ -1,0 +1,38 @@
+﻿@page "{id:int}"
+@model EliminarModel
+@{
+    ViewData["Title"] = "VitaNova - Eliminar Lote";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0"><i class="bi bi-trash"></i> Eliminar Lote</h4>
+            </div>
+            <div class="card-body text-center">
+                <i class="bi bi-exclamation-triangle-fill text-danger display-3 mb-3"></i>
+                <h4 class="fw-bold">¿Esta seguro que desea eliminar este lote?</h4>
+                <p class="text-muted">Esta accion no se puede deshacer.</p>
+
+                <div class="card bg-light border-0 rounded-3 p-3 mb-4 text-start">
+                    <p class="mb-2"><strong>Producto:</strong> @(Model.Lote.Producto?.Nombre ?? "Sin producto")</p>
+                    <p class="mb-2"><strong>Lote:</strong> @Model.Lote.NumeroLote</p>
+                    <p class="mb-2"><strong>Cantidad:</strong> @Model.Lote.Cantidad</p>
+                    <p class="mb-0"><strong>Vencimiento:</strong> @Model.Lote.FechaVencimiento.ToString("dd/MM/yyyy")</p>
+                </div>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Lote.ID" />
+
+                    <div class="d-flex gap-2">
+                        <a href="/Lotes" class="btn btn-outline-secondary w-50">Cancelar</a>
+                        <button type="submit" class="btn btn-danger w-50">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

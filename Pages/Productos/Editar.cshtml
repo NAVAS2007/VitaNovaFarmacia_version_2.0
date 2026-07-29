@@ -1,0 +1,86 @@
+﻿@page "{id:int}"
+@model EditarModel
+@{
+    ViewData["Title"] = "VitaNova - Editar Producto";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0"><i class="bi bi-pencil"></i> Editar Producto</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <input type="hidden" asp-for="Producto.ID" />
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Producto.Nombre" class="form-label fw-semibold">Nombre del Medicamento</label>
+                        <input asp-for="Producto.Nombre" class="form-control" required />
+                        <span asp-validation-for="Producto.Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Producto.CodigoBarras" class="form-label fw-semibold">Codigo de Barras</label>
+                        <input asp-for="Producto.CodigoBarras" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Producto.IdCategoria" class="form-label fw-semibold">Categoria</label>
+                        <select asp-for="Producto.IdCategoria" asp-items="Model.ListaCategorias" class="form-select" required>
+                            <option value="">Seleccione una categoria</option>
+                        </select>
+                        <span asp-validation-for="Producto.IdCategoria" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Producto.ComponenteActivo" class="form-label fw-semibold">Componente Activo</label>
+                        <textarea asp-for="Producto.ComponenteActivo" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Producto.Precio" class="form-label fw-semibold">Precio ($)</label>
+                            <input asp-for="Producto.Precio" type="number" step="0.01" class="form-control" required />
+                            <span asp-validation-for="Producto.Precio" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Producto.StockMinimo" class="form-label fw-semibold">Stock Minimo</label>
+                            <input asp-for="Producto.StockMinimo" type="number" class="form-control" required />
+                            <span asp-validation-for="Producto.StockMinimo" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Producto.Descripcion" class="form-label fw-semibold">Descripcion</label>
+                        <textarea asp-for="Producto.Descripcion" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input asp-for="Producto.RequiereReceta" class="form-check-input" />
+                            <label asp-for="Producto.RequiereReceta" class="form-check-label">Requiere receta medica</label>
+                        </div>
+                        <div class="form-check">
+                            <input asp-for="Producto.Activo" class="form-check-input" />
+                            <label asp-for="Producto.Activo" class="form-check-label">Producto activo</label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="/Productos" class="btn btn-outline-secondary w-50">Cancelar</a>
+                        <button type="submit" class="btn btn-warning w-50">
+                            <i class="bi bi-save"></i> Actualizar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

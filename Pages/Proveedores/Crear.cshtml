@@ -1,0 +1,58 @@
+﻿@page
+@model CrearModel
+@{
+    ViewData["Title"] = "VitaNova - Nuevo Proveedor";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Nuevo Proveedor</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Proveedor.Nombre" class="form-label fw-semibold">Nombre</label>
+                        <input asp-for="Proveedor.Nombre" class="form-control" placeholder="Ej. Laboratorios Vita" required />
+                        <span asp-validation-for="Proveedor.Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Proveedor.Telefono" class="form-label fw-semibold">Telefono</label>
+                        <input asp-for="Proveedor.Telefono" class="form-control" placeholder="Ej. 2233-4455" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Proveedor.Correo" class="form-label fw-semibold">Correo Electronico</label>
+                        <input asp-for="Proveedor.Correo" type="email" class="form-control" placeholder="ventas@ejemplo.com" />
+                        <span asp-validation-for="Proveedor.Correo" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Proveedor.Direccion" class="form-label fw-semibold">Direccion</label>
+                        <textarea asp-for="Proveedor.Direccion" class="form-control" rows="2" placeholder="Direccion completa"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Proveedor.NIT" class="form-label fw-semibold">NIT</label>
+                        <input asp-for="Proveedor.NIT" class="form-control" placeholder="Ej. 900123456-1" />
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="/Proveedores" class="btn btn-outline-secondary w-50">Cancelar</a>
+                        <button type="submit" class="btn btn-primary w-50">
+                            <i class="bi bi-save"></i> Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,64 @@
+﻿@page "{id:int}"
+@model AutorizarModel
+@{
+    ViewData["Title"] = "VitaNova - Autorizar Devolucion";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="bi bi-check-circle"></i> Autorizar Devolucion</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h5 class="fw-bold">Detalle de la devolucion</h5>
+                    <p><strong>Venta #:</strong> @Model.Devolucion.VentaID</p>
+                    <p><strong>Cliente:</strong> @(Model.Devolucion.Venta?.Cliente?.Nombre ?? "N/A")</p>
+                    <p><strong>Cajero:</strong> @(Model.Devolucion.Empleado?.Nombre ?? "N/A")</p>
+                    <p><strong>Motivo:</strong> @Model.Devolucion.Motivo</p>
+                    <p><strong>Total a devolver:</strong> <span class="fw-bold text-success">@Model.Devolucion.TotalDevuelto.ToString("C")</span></p>
+                </div>
+
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detalle in Model.Devolucion.Detalles)
+                        {
+                            <tr>
+                                <td>@(detalle.DetalleVenta?.Producto?.Nombre ?? "N/A")</td>
+                                <td>@detalle.Cantidad</td>
+                                <td>@detalle.PrecioDevuelto.ToString("C")</td>
+                                <td>@((detalle.Cantidad * detalle.PrecioDevuelto).ToString("C"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Devolucion.ID" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Credencial del Regente</label>
+                        <input type="password" asp-for="Credencial" class="form-control" placeholder="Ingrese su contrasena" required />
+                        <span asp-validation-for="Credencial" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="/Devoluciones" class="btn btn-outline-secondary w-50">Cancelar</a>
+                        <button type="submit" class="btn btn-success w-50 fw-bold">
+                            <i class="bi bi-check-circle"></i> Autorizar Devolucion
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

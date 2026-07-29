@@ -1,0 +1,53 @@
+﻿@page
+@model HistorialModel
+@{
+    ViewData["Title"] = "VitaNova - Historial de Ventas";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold"><i class="bi bi-clock-history text-primary"></i> Historial de Ventas</h2>
+        <p class="text-muted">Registro de todas las transacciones realizadas</p>
+    </div>
+    <div>
+        <a href="/Ventas/Carrito" class="btn btn-success">
+            <i class="bi bi-cart-plus"></i> Nueva Venta
+        </a>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th># Factura</th>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Empleado</th>
+                        <th>Metodo Pago</th>
+                        <th class="text-end">Total</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var venta in Model.Ventas)
+                    {
+                        <tr>
+                            <td class="fw-bold">@venta.ID</td>
+                            <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@(venta.Cliente?.Nombre ?? "Sin cliente")</td>
+                            <td>@(venta.Empleado?.Nombre ?? "N/A")</td>
+                            <td>@(venta.MetodoPago?.Nombre ?? "N/A")</td>
+                            <td class="text-end fw-bold">@venta.Total.ToString("C")</td>
+                            <td>
+                                <span class="badge bg-success">@venta.Estado</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+﻿@page "{id:int}"
+@model EditarModel
+@{
+    ViewData["Title"] = "VitaNova - Editar Cliente";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0"><i class="bi bi-pencil"></i> Editar Cliente</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <input type="hidden" asp-for="Cliente.ID" />
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Cliente.Documento" class="form-label fw-semibold">Documento</label>
+                        <input asp-for="Cliente.Documento" class="form-control" required />
+                        <span asp-validation-for="Cliente.Documento" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Cliente.Nombre" class="form-label fw-semibold">Nombre</label>
+                        <input asp-for="Cliente.Nombre" class="form-control" required />
+                        <span asp-validation-for="Cliente.Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Cliente.Apellido" class="form-label fw-semibold">Apellido</label>
+                        <input asp-for="Cliente.Apellido" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Cliente.Telefono" class="form-label fw-semibold">Telefono</label>
+                        <input asp-for="Cliente.Telefono" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Cliente.Correo" class="form-label fw-semibold">Correo Electronico</label>
+                        <input asp-for="Cliente.Correo" type="email" class="form-control" />
+                        <span asp-validation-for="Cliente.Correo" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Cliente.Direccion" class="form-label fw-semibold">Direccion</label>
+                        <textarea asp-for="Cliente.Direccion" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input asp-for="Cliente.Activo" class="form-check-input" />
+                            <label asp-for="Cliente.Activo" class="form-check-label">Cliente activo</label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="/Clientes" class="btn btn-outline-secondary w-50">Cancelar</a>
+                        <button type="submit" class="btn btn-warning w-50">
+                            <i class="bi bi-save"></i> Actualizar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

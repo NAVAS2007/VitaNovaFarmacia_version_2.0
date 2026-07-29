@@ -1,0 +1,118 @@
+﻿@page
+@model CrearModel
+@{
+    ViewData["Title"] = "VitaNova - Solicitar Devolucion";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0"><i class="bi bi-arrow-return-left"></i> Solicitar Devolucion</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Numero de Factura</label>
+                        <input type="number" id="ventaIdInput" class="form-control" 
+                               placeholder="Ingrese el numero de factura" 
+                               oninput="buscarVenta(this.value)" />
+                        <div id="ventaInfo" class="mt-2"></div>
+                        <input type="hidden" asp-for="VentaID" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Motivo" class="form-label fw-semibold">Motivo de la devolucion</label>
+                        <textarea asp-for="Motivo" class="form-control" rows="3" required></textarea>
+                        <span asp-validation-for="Motivo" class="text-danger"></span>
+                    </div>
+
+                    <div id="detallesVenta" style="display: none;">
+                        <h5 class="fw-bold">Productos de la venta</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                        <th>Cantidad a devolver</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detallesBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="/Devoluciones" class="btn btn-outline-secondary w-50">Cancelar</a>
+                        <button type="submit" class="btn btn-warning w-50 fw-bold">
+                            <i class="bi bi-save"></i> Solicitar Devolucion
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function buscarVenta(id) {
+            if (id.length < 1) {
+                document.getElementById('ventaInfo').innerHTML = '';
+                document.getElementById('detallesVenta').style.display = 'none';
+                return;
+            }
+
+            fetch('/Devoluciones/Crear?handler=BuscarVenta&id=' + id)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('ventaInfo').innerHTML = 
+                            '<div class="alert alert-danger">' + data.error + '</div>';
+                        document.getElementById('detallesVenta').style.display = 'none';
+                        return;
+                    }
+
+                    document.getElementById('ventaInfo').innerHTML = 
+                        `<div class="alert alert-success">
+                            <strong>Venta #${data.id}</strong> - 
+                            Cliente: ${data.cliente} - 
+                            Total: $${data.total}
+                        </div>`;
+
+                    document.getElementById('VentaID').value = data.id;
+                    document.getElementById('detallesVenta').style.display = 'block';
+
+                    var body = document.getElementById('detallesBody');
+                    body.innerHTML = data.detalles.map(d => `
+                        <tr>
+                            <td>${d.producto}</td>
+                            <td>${d.cantidad}</td>
+                            <td>$${d.precio}</td>
+                            <td>
+                                <input type="number" name="Cantidades[${d.id}]" 
+                                       class="form-control form-control-sm" 
+                                       style="width: 80px;" 
+                                       max="${d.cantidad}" min="0" 
+                                       onchange="actualizarTotal()" />
+                            </td>
+                        </tr>
+                    `).join('');
+                });
+        }
+
+        function actualizarTotal() {
+            var inputs = document.querySelectorAll('input[name^="Cantidades"]');
+            var total = 0;
+            inputs.forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+            document.getElementById('totalDevuelto').value = total;
+        }
+    </script>
+}

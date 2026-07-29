@@ -1,0 +1,66 @@
+﻿@page
+@model CrearModel
+@{
+    ViewData["Title"] = "VitaNova - Nuevo Empleado";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-person-plus"></i> Nuevo Empleado</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="text-center mb-4">
+                        <img src="https://ui-avatars.com/api/?name=@(Model.Nombre ?? "Usuario")&background=0d6efd&color=fff&size=100"
+                             class="rounded-circle img-thumbnail shadow-sm"
+                             style="width:100px;height:100px;object-fit:cover;" />
+                        <p class="text-muted small mt-2">
+                            <i class="bi bi-info-circle"></i> Foto generada automáticamente
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Nombre" class="form-label fw-semibold">Nombre Completo</label>
+                        <input asp-for="Nombre" class="form-control" required />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold">Correo Electronico</label>
+                        <input asp-for="Email" type="email" class="form-control" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PasswordInput" class="form-label fw-semibold">Contrasena</label>
+                        <input asp-for="PasswordInput" type="password" class="form-control" required />
+                        <span asp-validation-for="PasswordInput" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="RolID" class="form-label fw-semibold">Rol</label>
+                        <select asp-for="RolID" asp-items="Model.ListaRoles" class="form-select" required>
+                            <option value="">Seleccione un rol</option>
+                        </select>
+                        <span asp-validation-for="RolID" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="/Empleados" class="btn btn-outline-secondary w-50">Cancelar</a>
+                        <button type="submit" class="btn btn-primary w-50" id="btnGuardar">
+                            <i class="bi bi-save"></i> Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,65 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "VitaNova - Inicio";
+}
+
+<div class="row align-items-center mb-5">
+    <div class="col-lg-6">
+        <h1 class="display-4 fw-bold text-primary">Bienvenido a VitaNova</h1>
+        <p class="lead text-muted">Sistema integral de gestion farmaceutica</p>
+        <p class="mb-4">
+            Administre productos, lotes, clientes, empleados, proveedores y procese ventas
+            de manera eficiente con nuestro sistema inteligente.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+            <a href="/Productos" class="btn btn-primary btn-lg">
+                <i class="bi bi-box-seam"></i> Inventario
+            </a>
+            <a href="/Ventas/Carrito" class="btn btn-success btn-lg">
+                <i class="bi bi-cart"></i> Nueva Venta
+            </a>
+            <a href="/Devoluciones" class="btn btn-warning btn-lg">
+                <i class="bi bi-arrow-return-left"></i> Devoluciones
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-6 text-center">
+        <i class="bi bi-capsule" style="font-size: 120px; color: #0d6efd;"></i>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-primary">@Model.TotalProductosStock</h3>
+                <p class="text-muted">Unidades en stock</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-danger">@Model.ProductosCriticos</h3>
+                <p class="text-muted">Productos con stock bajo</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-warning">@Model.LotesPorVencer</h3>
+                <p class="text-muted">Lotes proximos a vencer</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-success">@Model.TotalClientes</h3>
+                <p class="text-muted">Clientes registrados</p>
+            </div>
+        </div>
+    </div>
+</div>

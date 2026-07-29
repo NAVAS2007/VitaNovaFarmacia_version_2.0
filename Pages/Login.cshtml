@@ -1,0 +1,138 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "VitaNova - Iniciar Sesion";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <style>
+            body {
+                background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .login-card {
+                background: white;
+                border-radius: 16px;
+                padding: 2.5rem;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                max-width: 420px;
+                width: 100%;
+            }
+
+            .login-icon {
+                background: #0d6efd;
+                color: white;
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 28px;
+                margin: 0 auto 1rem;
+            }
+
+            .farmacia-icon {
+                font-size: 48px;
+                color: #0d6efd;
+                display: block;
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+
+            .credential-hint {
+                font-size: 0.75rem;
+                color: #6c757d;
+                border-top: 1px solid #dee2e6;
+                padding-top: 0.75rem;
+                margin-top: 0.75rem;
+            }
+
+                .credential-hint code {
+                    background: #f8f9fa;
+                    padding: 0.1rem 0.5rem;
+                    border-radius: 4px;
+                    font-size: 0.7rem;
+                }
+    </style>
+</head>
+<body>
+    <div class="container d-flex justify-content-center">
+        <div class="login-card">
+            <div class="farmacia-icon">
+                <i class="bi bi-capsule"></i>
+            </div>
+            <h3 class="text-center fw-bold mb-4">VitaNova Farmacia</h3>
+            <p class="text-center text-muted mb-4">Ingrese sus credenciales para acceder</p>
+
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> @Model.ErrorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i> @Model.SuccessMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Correo electronico</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="correo@ejemplo.com" required autofocus />
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Contrasena</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-key"></i></span>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="********" required />
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                    <i class="bi bi-box-arrow-in-right me-2"></i> Ingresar
+                </button>
+            </form>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="mt-3 text-center">
+                    <a href="/Login?handler=Logout" class="btn btn-outline-danger w-100">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesion
+                    </a>
+                </div>
+            }
+
+            <hr />
+            <p class="text-center text-muted small mb-0">
+                Sistema de Gestion Farmaceutica &copy; @DateTime.Now.Year
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
