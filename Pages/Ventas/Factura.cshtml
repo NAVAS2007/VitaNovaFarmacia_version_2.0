@@ -1,0 +1,228 @@
+@page "{id:int}"
+@model VitaNovaFarmacia.Pages.Ventas.FacturaModel
+@{
+    ViewData["Title"] = $"Factura #{Model.Venta?.ID}";
+}
+
+<div class="container my-5">
+    @if (!string.IsNullOrEmpty(TempData["Exito"]?.ToString()))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Exito"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(TempData["Advertencia"]?.ToString()))
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            @TempData["Advertencia"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(TempData["Error"]?.ToString()))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (Model.Venta != null)
+    {
+        <div class="card shadow-lg">
+            
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0 text-white"><i class="bi bi-receipt"></i> Factura de Venta</h2>
+            </div>
+
+            <div class="card-body p-4">
+                <!-- Encabezado -->
+                <div class="row mb-4 text-center">
+                    <div class="col-12">
+                        <h3 class="fw-bold">VITA NOVA FARMACIA</h3>
+                        <p class="text-muted">Su farmacia de confianza</p>
+                    </div>
+                </div>
+
+                <!-- Información de la factura -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-6 fw-bold">Número de Factura:</div>
+                            <div class="col-6">@Model.Venta.ID</div>
+                            <div class="col-6 fw-bold">Fecha:</div>
+                            <div class="col-6">@Model.Venta.Fecha.ToString("dd/MM/yyyy HH:mm")</div>
+                            <div class="col-6 fw-bold">Empleado:</div>
+                            <div class="col-6">@(Model.Venta.Empleado?.Nombre ?? "N/A")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <p><strong>Estado:</strong> <span class="badge bg-success">@Model.Venta.Estado</span></p>
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <!-- Datos del cliente -->
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-person"></i> Datos del Cliente</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Nombre:</strong> @(Model.Venta.Cliente?.Nombre ?? "N/A") @(Model.Venta.Cliente?.Apellido ?? "")</p>
+                            <p><strong>Documento:</strong> @(Model.Venta.Cliente?.Documento ?? "N/A")</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Teléfono:</strong> @(Model.Venta.Cliente?.Telefono ?? "N/A")</p>
+                            <p><strong>Correo:</strong> @(Model.Venta.Cliente?.Correo ?? "N/A")</p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <!-- Tabla de productos -->
+                <h5 class="fw-bold mb-3"><i class="bi bi-cart"></i> Detalle de Productos</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-center">Cantidad</th>
+                                <th class="text-end">Precio Unitario</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var detalle in Model.Venta.DetalleVentas)
+                            {
+                                <tr>
+                                    <td>@(detalle.Producto?.Nombre ?? "N/A")</td>
+                                    <td class="text-center">@detalle.Cantidad</td>
+                                    <td class="text-end">$@detalle.PrecioUnitario.ToString("F2")</td>
+                                    <td class="text-end">$@((detalle.Cantidad * detalle.PrecioUnitario).ToString("F2"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="my-4" />
+
+                <!-- Totales -->
+                <div class="row mb-4">
+                    <div class="col-md-8"></div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8"><h5 class="mb-0"><strong>TOTAL:</strong></h5></div>
+                                    <div class="col-4 text-end"><h5 class="mb-0"><strong>$@Model.Venta.Total.ToString("F2")</strong></h5></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de pago -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p><strong>Método de Pago:</strong> @(Model.Venta.MetodoPago?.Nombre ?? "N/A")</p>
+                        <p><strong>Monto Recibido:</strong> $@Model.Venta.Recibido?.ToString("F2")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Cambio:</strong> <span class="badge bg-success fs-6">$@Model.Venta.Cambio?.ToString("F2")</span> </p>
+                    </div>
+                </div>
+
+                <!-- Sección de envío de email -->
+                <div class="card mt-4 border-info">
+
+                    <div class="card-header bg-info text-white">
+                        <h6 class="mb-0 text-white"><i class="bi bi-envelope-at"></i> Enviar Factura por Email</h6>
+                    </div>
+
+                    <div class="card-body">
+                        <form method="post" asp-page-handler="EnviarEmail">
+                            <input type="hidden" name="id" value="@Model.Venta.ID" />
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Correo del Cliente</label>
+                                <input type="email" class="form-control" value="@(Model.Venta.Cliente?.Correo ?? "Sin correo registrado")" disabled />
+                                <small class="form-text text-muted">El correo del cliente se enviará automáticamente</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="correosAdicionales" class="form-label">Correos Adicionales (Opcional)</label>
+                                <input type="text" class="form-control" id="correosAdicionales" name="correosAdicionales" 
+                                       placeholder="ej: correo1@gmail.com, correo2@gmail.com, correo3@hotmail.com" />
+                                <small class="form-text text-muted">Separa múltiples correos con comas</small>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-send"></i> Enviar Factura
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="card-footer bg-light d-flex justify-content-end gap-2 mt-3">
+                    <a href="/Ventas/Historial" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </a>
+
+                    <form method="post" asp-page-handler="DescargarPdf" style="display: inline;">
+                        <input type="hidden" name="id" value="@Model.Venta.ID" />
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-download"></i> Descargar PDF
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Pie de página -->
+                <div class="text-center mt-4 pt-4 border-top text-muted">
+                    <p><em>Gracias por su compra. ¡Vuelva pronto!</em></p>
+                    <small>Genera un recibo con fecha @DateTime.Now.ToString("dd/MM/yyyy")</small>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger">
+            La factura no se encontró.
+        </div>
+    }
+</div>
+
+<style>
+    .card {
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .badge {
+        padding: 0.5rem 0.75rem;
+    }
+
+    @@media print {
+        .card-footer {
+            display: none !important;
+        }
+
+        body {
+            background: white;
+        }
+    }
+</style>

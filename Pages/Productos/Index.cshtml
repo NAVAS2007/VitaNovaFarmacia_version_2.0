@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "VitaNova - Productos";
 }
+@Html.AntiForgeryToken()
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
@@ -132,12 +133,17 @@
 <!-- ============================================================ -->
 @section Scripts {
     <script>
-        function agregarAlCarrito(id, nombre, precio) {
+             function agregarAlCarrito(id, nombre, precio) {
             console.log("=== AGREGANDO: " + nombre + " (ID: " + id + ") ===");
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
             fetch('/Ventas/Carrito?handler=Agregar', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
                 body: JSON.stringify({
                     productoID: id,
                     nombre: nombre,

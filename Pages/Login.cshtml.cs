@@ -56,9 +56,9 @@ public class LoginModel : PageModel
             return Page();
         }
 
-        // ============================================================
+        
         // BYPASS: Acepta cualquier contraseña si el usuario existe
-        // ============================================================
+        
         bool esValida = false;
 
         if (Password == "123456")

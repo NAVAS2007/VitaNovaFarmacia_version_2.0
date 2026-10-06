@@ -4,6 +4,25 @@
     ViewData["Title"] = "VitaNova - Punto de Venta (POS)";
 }
 
+@if (Model.VentaID.HasValue)
+{
+    <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+        <h5 class="alert-heading">
+            <i class="bi bi-check-circle"></i> ¡Venta Procesada Exitosamente!
+        </h5>
+        <p class="mb-2">@TempData["Success"]</p>
+        <div class="d-flex gap-2">
+            <a href="/Ventas/Factura/@Model.VentaID" class="btn btn-primary btn-sm">
+                <i class="bi bi-receipt"></i> Ver Factura
+            </a>
+            <a href="/Ventas/Factura/@Model.VentaID?download=true" class="btn btn-secondary btn-sm">
+                <i class="bi bi-download"></i> Descargar PDF
+            </a>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="row">
     <div class="col-lg-8">
         <div class="card border-0 shadow-sm mb-3">
@@ -33,7 +52,7 @@
         </div>
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0"><i class="bi bi-cart"></i> Carrito de Compras</h4>
+                <h4 class="mb-0 text-white"> <i class="bi bi-cart"></i> Carrito de Compras</h4>
             </div>
             <div class="card-body p-0">
                 @if (Model.Items.Any())
@@ -103,14 +122,14 @@
     <div class="col-lg-4">
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-success text-white">
-                <h5 class="mb-0"><i class="bi bi-credit-card"></i> Procesar Pago</h5>
+                <h5 class="mb-0 text-white"><i class="bi bi-credit-card"></i> Procesar Pago</h5>
             </div>
             <div class="card-body">
                 @if (Model.Items.Any())
                 {
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Cliente</label>
-                        <select asp-for="ClienteID" class="form-select">
+                        <select id="clienteSelect" class="form-select" onchange="document.getElementById('clienteHidden').value = this.value">
                             <option value="">Seleccione un cliente</option>
                             @foreach (var cliente in Model.Clientes)
                             {
@@ -169,7 +188,7 @@
                     </div>
 
                     <form method="post" asp-page-handler="ProcesarVenta">
-                        <input type="hidden" asp-for="ClienteID" />
+                        <input type="hidden" asp-for="ClienteID" id="clienteHidden" />
                         <input type="hidden" asp-for="MetodoPagoID" id="metodoPagoHidden" />
                         <input type="hidden" asp-for="Recibido" id="recibidoHidden" />
                         <button type="submit" class="btn btn-success w-100 py-2 fw-bold" id="btnProcesarVenta">
@@ -200,6 +219,8 @@
         </div>
     </div>
 </div>
+
+<form id="antiForgeryForm">@Html.AntiForgeryToken()</form>
 
 @section Scripts {
     <script>
@@ -267,16 +288,23 @@
         }
 
         function agregarAlCarrito(id, nombre, precio) {
+            var token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+
             fetch('/Ventas/Carrito?handler=Agregar', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    productoID: id, 
-                    nombre: nombre, 
-                    precio: precio, 
-                    cantidad: 1 
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
+                body: JSON.stringify({
+                    productoID: id,
+                    nombre: nombre,
+                    precio: precio,
+                    cantidad: 1
                 })
-            })
+      })
+
+
             .then(function(response) {
                 return response.json();
             })
@@ -294,11 +322,17 @@
         }
 
         function cambiarCantidad(productoID, delta) {
+            var token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+
             fetch('/Ventas/Carrito?handler=ActualizarCantidad', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
                 body: JSON.stringify({ productoID: productoID, cantidad: delta })
             })
+
             .then(function(response) {
                 return response.json();
             })
@@ -317,9 +351,14 @@
 
         function eliminarProducto(productoID) {
             if (confirm('Eliminar este producto del carrito?')) {
+                var token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+
                 fetch('/Ventas/Carrito?handler=Eliminar', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
                     body: JSON.stringify({ productoID: productoID })
                 })
                 .then(function(response) {

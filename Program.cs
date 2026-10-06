@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using VitaNovaFarmacia.Data;
+using VitaNovaFarmacia.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,10 @@ builder.Services.AddSession(options =>
 
 // Agregar HttpContextAccessor para acceder a la sesion en los modelos
 builder.Services.AddHttpContextAccessor();
+
+// Registrar servicios de PDF y Email
+builder.Services.AddScoped<PdfService>();
+builder.Services.AddScoped<EmailService>();
 
 // Agregar Razor Pages
 builder.Services.AddRazorPages();

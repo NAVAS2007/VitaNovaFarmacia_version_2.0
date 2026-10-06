@@ -22,6 +22,7 @@ public class CarritoModel : PageModel
     public decimal Total => Items.Sum(i => i.Subtotal);
     public List<Cliente> Clientes { get; set; } = new();
     public List<MetodoPago> MetodosPago { get; set; } = new();
+    public int? VentaID { get; set; } // Para mostrar botón de factura
 
     [BindProperty]
     public int? ClienteID { get; set; }
@@ -34,6 +35,12 @@ public class CarritoModel : PageModel
 
     public async Task OnGetAsync()
     {
+        // Obtener VentaID desde TempData si existe
+        if (TempData["VentaID"] != null && int.TryParse(TempData["VentaID"].ToString(), out int ventaID))
+        {
+            VentaID = ventaID;
+        }
+
         await CargarDatos();
         CargarCarrito();
     }
@@ -163,7 +170,7 @@ public class CarritoModel : PageModel
     {
         if (!ClienteID.HasValue)
         {
-            TempData["Error"] = "Seleccione un cliente.";
+            TempData["Error"] = "No se pudo generar la compra.";
             await CargarDatos();
             CargarCarrito();
             return Page();
@@ -276,7 +283,8 @@ public class CarritoModel : PageModel
             HttpContext.Session.Remove("Carrito");
 
             TempData["Success"] = $"Venta #{venta.ID} procesada exitosamente. Total: {venta.Total:C}";
-            return RedirectToPage("/Ventas/Historial");
+            TempData["VentaID"] = venta.ID; // Guardar ID para mostrar botón de factura
+            return RedirectToPage();
         }
         catch (Exception ex)
         {
